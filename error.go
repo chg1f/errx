@@ -24,10 +24,7 @@ func (ex *Error[T]) Is(err error) bool { return ex.err == err }
 var _ interface{ Is(error) bool } = &Error[struct{}]{}
 
 func (ex *Error[T]) In(code T, from ...string) bool {
-	if len(from) > 0 {
-		ex.from = from[0]
-	}
-	return ex.code == code
+	return ex.code == code && (len(from) == 0 || ex.from == from[0])
 }
 
 func (ex Error[T]) From() string { return ex.from }
