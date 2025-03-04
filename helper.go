@@ -34,3 +34,10 @@ func Be[T comparable](err error) *Error[T] {
 	}
 	return ex
 }
+
+func Stack(err error) []Frame {
+	if ex := Be[struct{}](err); ex != nil {
+		return ex.Stack()
+	}
+	return []Frame{}
+}

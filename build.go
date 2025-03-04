@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-var Debug = false
-
 type Builder[T comparable] struct {
 	err error
 	msg string
@@ -35,9 +33,7 @@ func (eb Builder[T]) New(msg string) error {
 	if msg != "" {
 		ex := eb.clone()
 		ex.msg = msg
-		if Debug {
-			ex.stack = stack()
-		}
+		ex.stack = stack()
 		return (*Error[T])(&ex)
 	}
 	return nil
@@ -55,9 +51,7 @@ func (eb Builder[T]) Wrap(err error) error {
 	if err != nil {
 		ex := eb.clone()
 		ex.err = err
-		if Debug {
-			ex.stack = stack()
-		}
+		ex.stack = stack()
 		return (*Error[T])(&ex)
 	}
 	return nil
@@ -109,6 +103,10 @@ type Frame struct {
 	FileName     string
 	FileLine     int
 	FunctionName string
+}
+
+func (f Frame) String() string {
+	return fmt.Sprintf("%s:%d %s", f.FileName, f.FileLine, f.FunctionName)
 }
 
 func stack() []Frame {
