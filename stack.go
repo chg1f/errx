@@ -10,7 +10,8 @@ import (
 type shadow struct{}
 
 var (
-	maxDepth    = 32
+	StackDepth = 10
+
 	packageName = reflect.TypeOf(shadow{}).PkgPath()
 )
 
@@ -25,8 +26,8 @@ func (f Frame) String() string {
 }
 
 func stack() []Frame {
-	frames := make([]Frame, 0, maxDepth)
-	for i := 0; i < maxDepth; i++ {
+	frames := make([]Frame, 0, StackDepth)
+	for i := 0; i < StackDepth; i++ {
 		pc, file, line, ok := runtime.Caller(i)
 		if !ok {
 			break
