@@ -27,13 +27,10 @@ func (eb Builder[T]) clone() Builder[T] {
 }
 
 func (eb Builder[T]) New(msg string) error {
-	if msg != "" {
-		ex := eb.clone()
-		ex.msg = msg
-		ex.stack = stack()
-		return (*Error[T])(&ex)
-	}
-	return nil
+	ex := eb.clone()
+	ex.msg = msg
+	ex.stack = stack()
+	return (*Error[T])(&ex)
 }
 
 func (eb Builder[T]) Errorf(format string, args ...interface{}) error {
@@ -55,18 +52,7 @@ func (eb Builder[T]) Wrap(err error) error {
 }
 
 func (eb Builder[T]) Join(e ...error) error {
-	return eb.clone().Wrap(errors.Join(e...))
-}
-
-func Recover(fallback error) error {
-	if r := recover(); r != nil {
-		err, ok := r.(error)
-		if !ok {
-			err = Errorf("%v", r)
-		}
-		return err
-	}
-	return fallback
+	return eb.Wrap(errors.Join(e...))
 }
 
 func From[T comparable](from string) Builder[T] {
